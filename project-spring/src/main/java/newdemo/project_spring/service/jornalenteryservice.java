@@ -27,6 +27,10 @@ public class jornalenteryservice {
     {
         return jornalenteryReporesertory.findById(Id);
     }
+    public void deleteById(ObjectId Id)
+    {
+        jornalenteryReporesertory.deleteById(Id);
+    }
 
 
 }

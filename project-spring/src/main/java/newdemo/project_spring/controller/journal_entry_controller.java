@@ -4,12 +4,15 @@ import newdemo.project_spring.entery.jornalEntry;
 import newdemo.project_spring.service.jornalenteryservice;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping ("/journal")
@@ -34,22 +37,34 @@ public class journal_entry_controller {
     }
 
     @GetMapping("id/{myId}")
-    public jornalEntry getJornalEntrybyId(@PathVariable Long myId)
+    public ResponseEntity<jornalEntry> getJornalEntrybyId(@PathVariable ObjectId myId)
     {
-        return   null;
+        Optional<jornalEntry>JornalEntry=jornalenteryservice.finById(myId);
+        if(JornalEntry.isPresent()){
+            return new ResponseEntity<>(JornalEntry.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(JornalEntry.get(),HttpStatus.NOT_FOUND);
     }
 
 
 
     @DeleteMapping("id/{myId}")
-    public jornalEntry deleateJornalEntrybyId(@PathVariable ObjectId myId)
+    public Boolean deleateJornalEntrybyId(@PathVariable ObjectId myId)
     {
-       return   null;
+          jornalenteryservice.deleteById(myId);
+          return true;
     }
 
-    @PutMapping("/id/{id}")
-    public jornalEntry UpdateJornalEntrybyId(@PathVariable ObjectId Id,@RequestBody jornalEntry mEntry)
+    @PutMapping("id/{Id}")
+    public jornalEntry UpdateJornalEntrybyId(@PathVariable ObjectId Id,@RequestBody jornalEntry newEntry)
     {
-       return null;
+        jornalEntry old= jornalenteryservice.finById(Id).orElse(null);
+
+        if(old !=null){
+            old.setTitle( newEntry.getTitle() !=null && !newEntry.getTitle().equals("")? newEntry.getTitle():old.getTitle());
+            old.setContent( newEntry.getContent() !=null && !newEntry.getContent().equals("")? newEntry.getContent():old.getContent());
+        }
+        jornalenteryservice.saveEntery(old);
+        return old;
     }
 }
