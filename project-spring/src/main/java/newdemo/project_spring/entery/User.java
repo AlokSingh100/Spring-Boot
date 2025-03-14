@@ -9,14 +9,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
-@Getter
-@Document(collation = "user")
+
+@Document(collection = "user")
 @Data
 public class User {
 
@@ -24,6 +24,7 @@ public class User {
     private ObjectId id;
     @Indexed(unique = true)
     @NonNull
+    @Field("Username")
     private String Username;
     @NonNull
     private String Password;

@@ -24,17 +24,22 @@ public class user_controller {
 
 
 @GetMapping
-private List<User>getAllUser(){
+private List<User>getAllUser()
+{
+    List <User> ob=userservice.getAll();
+    System.out.println(ob);
+
     return userservice.getAll();
     }
-
-    @PostMapping
+ @PostMapping
     public void createUser(@RequestBody User user){
     userservice.saveEntery(user);
     }
-    @PutMapping
-    public  ResponseEntity<User> updateUser(@RequestBody User user){
-User user1=userservice.finByUsername(user.getUsername());
+
+
+    @PutMapping("/{username}")
+    public  ResponseEntity<User> updateUser(@RequestBody User user,@PathVariable String  Username){
+User user1=userservice.finByUsername(Username);
 if (user1 != null){
     user1.setUsername(user.getUsername());
     user1.setPassword(user.getPassword());
